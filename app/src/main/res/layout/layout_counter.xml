@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/bottom_dialog_bg">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_dialog_bg">
+
+        <RelativeLayout
+            android:id="@+id/rl_option"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Set Timer"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/btnCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_close" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/dummy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_option"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="Hour         :        Minute"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <com.sleep.fan.cutomView.CustomTimePickerView
+            android:id="@+id/timePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dummy"
+            android:layout_centerHorizontal="true"
+            android:numbersTextColor="@color/white"
+            android:timePickerMode="spinner" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btnDone"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_below="@+id/timePicker"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginBottom="15dp"
+            android:text="Start"
+            app:cardBackgroundColor="#4b69b1"
+            app:cardCornerRadius="20dp"
+            android:textSize="22sp"
+            android:textStyle="bold">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="Start"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+
+</RelativeLayout>

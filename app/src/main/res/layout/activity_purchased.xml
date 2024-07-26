@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityPurchased"
+    android:background="@drawable/back_bg">
+
+    <include
+        android:id="@+id/txt_title_fan"
+        layout="@layout/layout_action_bar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/parent"
+        android:paddingBottom="50dp"
+        android:layout_below="@id/txt_title_fan"
+        >
+
+
+    <ImageView
+        android:id="@+id/ivGif"
+        android:layout_width="@dimen/anim_height"
+        android:layout_height="@dimen/anim_height"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/viewGarbage"
+        />
+
+        <TextView
+            android:id="@+id/viewGarbage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="invisible" />
+
+        <LinearLayout
+            android:id="@+id/llFanSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dip"
+            android:layout_below="@id/ivGif"
+            >
+
+            <ImageButton
+                android:id="@+id/fastButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fan"
+                android:layout_marginRight="25dip"
+                android:background="@android:color/transparent"
+                android:src="@drawable/fast_selected" />
+
+            <ImageButton
+                android:id="@+id/mediumButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fan"
+                android:background="@android:color/transparent"
+                android:src="@drawable/medium_unselected" />
+
+
+            <ImageButton
+                android:id="@+id/slowButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fan"
+                android:layout_marginLeft="25dip"
+                android:background="@android:color/transparent"
+                android:src="@drawable/slow_unselected" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set Timer"
+            android:textAllCaps="false"
+            android:layout_below="@id/llFanSpeed"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            />
+
+        <RelativeLayout
+            android:id="@+id/layout_timer"
+            android:layout_width="230dip"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llFanSpeed"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/timer_margin"
+            android:background="@drawable/panel"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:visibility="gone"
+            >
+
+            <include
+                layout="@layout/layout_player_controls"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_id"
+        android:layout_gravity="bottom"
+        >
+
+    </com.google.android.gms.ads.AdView>
+
+</RelativeLayout>

@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Sleep Fan</string>
+    <string name="ad_application_id">ca-app-pub-7701524183129395~1359944064</string>
+    <string name="banner_ad_id">ca-app-pub-7701524183129395/2274237262</string>
+    <string name="interstitial_ad_id">ca-app-pub-7701524183129395/5227703660</string>
+    <string name="inapp_license_key">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr3ybCckQwxE9zfsrbnrXFdSS5El6g8NY7R1Y2/fyxDO1avC0YGalAPWsZIIhCrqCnVslKR+5IcLn7Kat15MOKZwyIzUan+WrK2SRD4YkAeXDYGHOsnlFptPFbeOBHeoGZ2hKcpniGZCzsiOqf9LkUMDqE1sY5yb+n702aiQwpmQQDKKGezf7aAM60LD3xUl08rDHPBZszn2uy9HdtdsxEwb3x+Dx6+USDVmVxIB9n5RUjrlm8HpWyGRe7wC476NS0dKT00vAyMrLNPVxW2VtypdBHJbmgGPlHoUmYAJKnD/IBJR0EbYTNzqcHvCaFCD9AGZozrV3bBRIf23TbOF1GQIDAQAB</string>
+    <string name="sounds">Sounds</string>
+    <string name="fans">Fans</string>
+    <string name="tracking">Tracking</string>
+    <string name="google_cloud_sign_in_id">http://703050896455-as2eorbob47u4shfrjugdlkogs5qkpc2.apps.googleusercontent.com</string>
+
+    <string name="ok">OK</string>
+    <string name="intro_text">Hi! Writing sleep data to the Fit API! Use the menu to read it back.</string>
+    <string name="permission_rationale">Activity recognition is used as part of the Google Fit API</string>
+    <string name="permission_denied_explanation">Permission was denied, but is needed for core functionality.</string>
+    <string name="settings">Settings</string>
+    <string name="action_raw_by_day">Read raw by day</string>
+
+</resources>

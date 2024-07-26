@@ -1,0 +1,74 @@
+[
+  {
+      "position": 1,
+      "inAppID": "",
+      "name" : "Fan 1",
+      "isPurchased": true,
+      "icon": "ac_fan_un",
+      "soundID": "air_conditioner_clean_loop"
+  },
+  {
+    "position": 2,
+    "inAppID": "",
+      "name" : "Fan 2",
+      "isPurchased": true,
+    "icon": "box_fan_un",
+    "soundID": "box_fan_clean_loop"
+  },
+  {
+    "position": 3,
+    "inAppID": "",
+      "name" : "Fan 3",
+      "isPurchased": true,
+    "icon": "oven_fan_un",
+    "soundID": "ovan_fan_clean_loop"
+  },
+  {
+    "position": 4,
+    "inAppID": "",
+      "name" : "Fan 4",
+      "isPurchased": true,
+    "icon": "fire_furnance_fan_un",
+    "soundID": "fire_furnace_clean_loop"
+  },
+  {
+    "position": 5,
+    "inAppID": "rain",
+      "name" : "Rain",
+      "isPurchased": false,
+    "icon": "rain",
+    "soundID": "rain_sound"
+  },
+    {
+        "position": 6,
+        "inAppID": "night-time-crickets",
+        "name" : "Night time crickets",
+        "isPurchased": false,
+        "icon": "night_time_crickets",
+        "soundID": "night_time_crickets"
+    },
+    {
+        "position": 7,
+        "inAppID": "relaxing-meditation",
+        "name" : "Relaxing Meditation",
+        "isPurchased": false,
+        "icon": "relaxing_meditation",
+        "soundID": "relaxing_meditation"
+    },
+    {
+        "position": 8,
+        "inAppID": "crashing-waves",
+        "name" : "Crashing waves",
+        "isPurchased": false,
+        "icon": "crashing_waves",
+        "soundID": "crashing_waves"
+    },
+    {
+        "position": 9,
+        "inAppID": "river",
+        "name" : "River",
+        "isPurchased": false,
+        "icon": "river",
+        "soundID": "river_sound"
+    }
+]

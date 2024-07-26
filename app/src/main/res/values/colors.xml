@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#03508e</color>
+    <color name="colorPrimaryDark">#03508e</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="white">#FFFFFF</color>
+    <color name="tab_icon_color">#95ffffff</color>
+    <color name="subTextColor">#fefffa</color>
+    <color name="transparentWhite">#95000000</color>
+    <color name="tab_textColor">#979797</color>
+    <color name="transparentIndicator">#00ffffff</color>
+    <color name="transparentTabWhite">#75ffffff</color>
+    <color name="tabIndicatorColor">#F9AF2A</color>
+    <color name="subTxtColor">#767a80</color>
+    <color name="awakeColor">#ea674f</color>
+    <color name="remColor">#3577f7</color>
+    <color name="coreColor">#0c7071</color>
+    <color name="deepColor">#302e93</color>
+</resources>

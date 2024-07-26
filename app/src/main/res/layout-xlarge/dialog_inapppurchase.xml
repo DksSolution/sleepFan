@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/ib_close"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_close"
+        android:padding="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"/>
+
+
+
+    <ImageView
+        android:id="@+id/iv_fan"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="40dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/fan8"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_fan"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:paddingTop="40dp"
+        android:paddingBottom="40dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="Would you like to buy \n this sound ?"
+        android:textStyle="bold"
+        android:textSize="16sp"/>
+
+    <Button
+        android:layout_below="@id/tv_description"
+        android:id="@+id/btn_purchase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BUY"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:background="#48955D"/>
+
+</RelativeLayout>

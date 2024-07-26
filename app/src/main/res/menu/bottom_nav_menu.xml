@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_fans"
+        android:title="@string/fans"
+        android:visible="true"
+        android:icon="@drawable/fans"/>
+    <item
+        android:id="@+id/menu_tracking"
+        android:title="@string/tracking"
+        android:visible="true"
+        android:icon="@drawable/tracking"/>
+    <item
+        android:id="@+id/menu_sounds"
+        android:title="@string/sounds"
+        android:visible="true"
+        android:icon="@drawable/sounds"/>
+</menu>

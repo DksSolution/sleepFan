@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tvTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:textSize="@dimen/time_text"
+        />
+
+    <ImageButton
+        android:id="@+id/btnPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTimer"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/margin_options"
+        android:layout_marginRight="20dip"
+        android:src="@drawable/pause"
+        android:background="@android:color/transparent"/>
+
+    <ImageButton
+        android:id="@+id/btnSpin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTimer"
+        android:layout_marginTop="@dimen/margin_options"
+        android:background="@android:color/transparent"
+        android:src="@drawable/startspin"
+        android:layout_centerHorizontal="true"
+        />
+
+    <ImageButton
+        android:id="@+id/btnStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTimer"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="@dimen/margin_options"
+        android:background="@android:color/transparent"
+        android:src="@drawable/stop"
+        android:layout_marginLeft="20dip"/>
+
+</RelativeLayout>
