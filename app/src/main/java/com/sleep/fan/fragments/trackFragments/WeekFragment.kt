@@ -3,6 +3,7 @@ package com.sleep.fan.fragments.trackFragments
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.DashPathEffect
 import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Bundle
@@ -67,6 +68,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -568,17 +570,32 @@ class WeekFragment : Fragment() {
     // ******* Start New Chart code ********
     data class WeeklySleepData(
         val day: String,
+        val sleep_time: String, // Sleep start time for the day
         val awakeSlots: List<TimeSlot>,
         val remSlots: List<TimeSlot>,
         val coreSlots: List<TimeSlot>,
-        val deepSlots: List<TimeSlot>,
+        val deepSlots: List<TimeSlot>
     )
 
     data class TimeSlot(
         val start: Float,
         val duration: Float,
     )
-
+    fun extractTime(timeString: String?): String? {
+        return try {
+            if (timeString != null) {
+                val dateTimeFormat = SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a", Locale.getDefault())
+                val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+                val date = dateTimeFormat.parse(timeString)
+                date?.let { timeFormat.format(date) }
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
     //    private lateinit var dateTime: LocalDateTime
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun processSleepData(sleepData: List<SleepEntity>): List<WeeklySleepData> {
@@ -588,15 +605,16 @@ class WeekFragment : Fragment() {
             val sleepEntity = sleepData[i]
 
             val day = getDayName(sleepEntity.sleep_time!!)
-
+            val sleep_startTime = extractTime(sleepEntity.sleep_time)
             val awakeSlots = extractTimeSlots(sleepEntity.awake_sleep)
             val remSlots = extractTimeSlots(sleepEntity.rem_sleep)
             val coreSlots = extractTimeSlots(sleepEntity.core_sleep)
             val deepSlots = extractTimeSlots(sleepEntity.deep_sleep)
-
+            Log.e(TAG, "processSleepData: $sleep_startTime", )
             weeklyData.add(
                 WeeklySleepData(
                     day = day,
+                    sleep_time = sleep_startTime.toString(),
                     awakeSlots = awakeSlots,
                     remSlots = remSlots,
                     coreSlots = coreSlots,
@@ -647,6 +665,14 @@ class WeekFragment : Fragment() {
             val data = dataMap[day]
 
             if (data != null) {
+                // Calculate the starting empty duration from 6 PM to the start of the first event
+                val dateTimeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+                val startTime = dateTimeFormat.parse(data.sleep_time)
+                val calendar = Calendar.getInstance()
+                calendar.time = startTime
+                val startHour = calendar.get(Calendar.HOUR_OF_DAY) + calendar.get(Calendar.MINUTE) / 60f
+                val startOffset = if (startHour < 18) 6f else startHour - 18f
+
                 // Get durations for each sleep type
                 val awakeDurations = data.awakeSlots.map { it.duration }.toFloatArray()
                 val remDurations = data.remSlots.map { it.duration }.toFloatArray()
@@ -657,12 +683,12 @@ class WeekFragment : Fragment() {
                 entries.add(
                     BarEntry(
                         i.toFloat(),
-                        awakeDurations + remDurations + coreDurations + deepDurations
+                        floatArrayOf(startOffset) + awakeDurations + remDurations + coreDurations + deepDurations
                     )
                 )
             } else {
                 // Add an empty BarEntry for days with no data
-                entries.add(BarEntry(i.toFloat(), floatArrayOf(0f, 0f, 0f, 0f)))
+                entries.add(BarEntry(i.toFloat(), floatArrayOf(6f, 0f, 0f, 0f, 0f)))
             }
         }
 
@@ -670,44 +696,46 @@ class WeekFragment : Fragment() {
         val barDataSet = BarDataSet(entries, "Sleep Data")
         // Set colors for different sleep types
         barDataSet.setColors(
-            Color.rgb(255, 102, 102),  // Awake
-            Color.rgb(102, 178, 255),  // REM
-            Color.rgb(102, 255, 178),  // Core
-            Color.rgb(255, 178, 102)   // Deep
+            Color.TRANSPARENT,        // Empty
+            Color.parseColor("#ea674f"),  // Awake
+            Color.parseColor("#3577f7"),  // REM
+            Color.parseColor("#0c7071"),  // Core
+            Color.parseColor("#302e93")   // Deep
         )
-        barDataSet.stackLabels = arrayOf("Awake", "REM", "Core", "Deep")
+        barDataSet.stackLabels = arrayOf("Empty", "Awake", "REM", "Core", "Deep")
 
-        // Create BarData with the BarDataSet
         val barData = BarData(barDataSet)
-        // Set bar width to control the width of each bar
-        barData.barWidth = 0.4f // Adjust this value to control bar width
+        barData.barWidth = 0.4f
 
         barDataSet.valueFormatter = object : ValueFormatter() {
             override fun getBarLabel(barEntry: BarEntry?): String {
-                // Return an empty string to hide the labels
+                return ""
+            }
+
+            override fun getFormattedValue(value: Float): String {
                 return ""
             }
         }
 
-        // Other chart configurations
+        // Hide values above bars
+        barData.setValueTextColor(Color.TRANSPARENT)
         chart!!.setDrawValueAboveBar(false)
-
-        // Assign the data to the chart
         chart!!.data = barData
-
-        // Configure the x-axis
         val xAxis = chart!!.xAxis
         xAxis.valueFormatter = IndexAxisValueFormatter(daysOfWeek)
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.textColor = Color.WHITE
-
+        xAxis.setDrawGridLines(true) // Ensure grid lines are drawn
+        xAxis.gridLineWidth = 1f // Set the width of the grid lines
+        xAxis.setGridDashedLine(DashPathEffect(floatArrayOf(10f, 5f), 0f))
         // Configure the y-axis
         val yAxis = chart!!.axisLeft
         yAxis.axisMinimum = 0f
         yAxis.axisMaximum = 24f
-        yAxis.mEntryCount = 7
         yAxis.textColor = Color.WHITE
-        yAxis.setLabelCount(8, true)
+        yAxis.setLabelCount(8, false)
+        yAxis.granularity = 3f // Ensure labels are shown at intervals of 3 hours
+        yAxis.setDrawGridLines(false) // Remove horizontal grid lines
         yAxis.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 val hour = value.toInt()
@@ -726,7 +754,10 @@ class WeekFragment : Fragment() {
         }
 
         // Disable the right y-axis
-        chart!!.axisRight.isEnabled = false
+        val rightAxis = chart!!.axisRight
+        rightAxis.isEnabled = false
+        rightAxis.setDrawGridLines(false) // Ensure no grid lines are drawn on the right axis
+
         // Disable the description text
         chart!!.description.isEnabled = false
         // Enable the legend
@@ -734,6 +765,10 @@ class WeekFragment : Fragment() {
         // Refresh the chart
         chart!!.invalidate()
     }
+
+
+
+
 
     // ******* End New Chart code ********
 
