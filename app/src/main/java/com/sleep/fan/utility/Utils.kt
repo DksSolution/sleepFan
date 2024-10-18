@@ -343,7 +343,7 @@ class Utils {
                 return spannableString
             } else {
                 // Handle cases where the input string is not in the expected format
-                return SpannableString("Invalid input format")
+                return SpannableString("Unkn")
             }
         }
     }

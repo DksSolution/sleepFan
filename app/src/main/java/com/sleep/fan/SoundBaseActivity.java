@@ -15,14 +15,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.wav.WavExtractor;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
@@ -32,20 +32,19 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
-import com.google.android.exoplayer2.upstream.FileDataSourceFactory;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.internal.Constants;
 import com.sleep.fan.model.DataModel;
 
-public class SoundBaseActivity extends AppCompatActivity implements Player.EventListener {
+public class SoundBaseActivity extends AppCompatActivity implements Player.Listener {
 
     //private int fanType;
     boolean isPlaying = false;
 
     private TrackSelector trackSelector;
     private LoadControl loadControl;
-    SimpleExoPlayer player;
+    ExoPlayer player;
 
     MusicService musicService;
     boolean mBounded;
@@ -56,7 +55,12 @@ public class SoundBaseActivity extends AppCompatActivity implements Player.Event
 
         trackSelector = new DefaultTrackSelector();
         loadControl = new DefaultLoadControl();
-        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
+        player = new ExoPlayer.Builder(this)
+            .setTrackSelector(trackSelector)
+            .setLoadControl(loadControl)
+            .build();
+
+// Add the listener
         player.addListener(this);
     }
 
@@ -103,7 +107,8 @@ public class SoundBaseActivity extends AppCompatActivity implements Player.Event
             }
         };
 
-        audioSource = new ProgressiveMediaSource.Factory(factory, WavExtractor.FACTORY).createMediaSource(rawResourceDataSource.getUri());
+        MediaItem mediaItem = MediaItem.fromUri(rawResourceDataSource.getUri());
+        audioSource = new ProgressiveMediaSource.Factory(factory, WavExtractor.FACTORY).createMediaSource(mediaItem);
     }
 
     MediaSource audioSource;
@@ -183,16 +188,17 @@ public class SoundBaseActivity extends AppCompatActivity implements Player.Event
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         stopMediaPlayer();
-        if(player != null) {
+        if (player != null) {
             player.release();
             player = null;
         }
 
-        if(trackSelector != null)
+        if (trackSelector != null)
             trackSelector = null;
 
-        if(loadControl != null)
+        if (loadControl != null)
             loadControl = null;
 
         finish();
@@ -201,16 +207,6 @@ public class SoundBaseActivity extends AppCompatActivity implements Player.Event
     // exo player overrriden method start
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
-
-    @Override
-    public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
-
-    }
-
-    @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
 
     }
 
@@ -232,11 +228,6 @@ public class SoundBaseActivity extends AppCompatActivity implements Player.Event
     @Override
     public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
 
-    }
-
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-        isPlaying = false;
     }
 
     @Override

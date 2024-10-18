@@ -69,8 +69,6 @@ object SleepDataGenerator {
         }
     }
 
-
-
     private fun generateSleepData(sleepStart: String, sleepEnd: String, formatTime: String): SleepData? {
         return try {
             // Parsing the sleep start and end times with the correct format
@@ -78,23 +76,56 @@ object SleepDataGenerator {
             val sleepStartTime = sdf.parse(sleepStart)
             val sleepEndTime = sdf.parse(sleepEnd)
 
-            // Print the parsed dates for debugging
-//            Log.e("","Parsed Sleep Start Time: $sleepStartTime")
-//            Log.e("","Parsed Sleep End Time: $sleepEndTime")
-
             if (sleepStartTime != null && sleepEndTime != null) {
-                // Generating random durations
-                val awakeTimes = generateRandomDurations(sleepStartTime, sleepEndTime, 4, 6)
-                val remTimes = generateRandomDurations(sleepStartTime, sleepEndTime, 4, 6)
-                val coreTimes = generateRandomDurations(sleepStartTime, sleepEndTime, 4, 6)
-                val deepTimes = generateRandomDurations(sleepStartTime, sleepEndTime, 2, 4)
+                // Total sleep duration in minutes
+                val totalSleepDuration = ((sleepEndTime.time - sleepStartTime.time) / 60000).toInt()
+
+                // Define sleep stages durations in minutes
+                val awakeDurations = mutableListOf<Pair<Date, Date>>()
+                val remDurations = mutableListOf<Pair<Date, Date>>()
+                val coreDurations = mutableListOf<Pair<Date, Date>>()
+                val deepDurations = mutableListOf<Pair<Date, Date>>()
+
+                var remainingTime = totalSleepDuration
+                val calendar = Calendar.getInstance()
+                calendar.time = sleepStartTime
+
+                while (remainingTime > 0) {
+                    val stageDuration = (15..45).random().coerceAtMost(remainingTime)
+                    val start = calendar.time
+                    calendar.add(Calendar.MINUTE, stageDuration)
+                    val end = calendar.time
+
+                    when ((1..4).random()) {
+                        1 -> awakeDurations.add(Pair(start, end))
+                        2 -> remDurations.add(Pair(start, end))
+                        3 -> coreDurations.add(Pair(start, end))
+                        4 -> deepDurations.add(Pair(start, end))
+                    }
+
+                    remainingTime -= stageDuration
+                }
+
+                // Function to convert a list of pairs of dates to a list of formatted strings
+                fun convertToTimeRanges(timeRanges: List<Pair<Date, Date>>): List<String> {
+                    return timeRanges.map { (start, end) ->
+                        val startFormatted = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(start)
+                        val endFormatted = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(end)
+                        "$startFormatted to $endFormatted"
+                    }
+                }
+
+                // Generating the actual time ranges
+                val awakeTimes = convertToTimeRanges(awakeDurations)
+                val remTimes = convertToTimeRanges(remDurations)
+                val coreTimes = convertToTimeRanges(coreDurations)
+                val deepTimes = convertToTimeRanges(deepDurations)
 
                 // Calculating total times
-                val totalAwakeTime = calculateTotalTime(awakeTimes)
-                val totalRemTime = calculateTotalTime(remTimes)
-                val totalCoreTime = calculateTotalTime(coreTimes)
-                val totalDeepTime = calculateTotalTime(deepTimes)
-                val totalSleepTime = formatTime // Example value
+                val totalAwakeTime = awakeDurations.sumOf { (it.second.time - it.first.time) / 60000 }.toInt()
+                val totalRemTime = remDurations.sumOf { (it.second.time - it.first.time) / 60000 }.toInt()
+                val totalCoreTime = coreDurations.sumOf { (it.second.time - it.first.time) / 60000 }.toInt()
+                val totalDeepTime = deepDurations.sumOf { (it.second.time - it.first.time) / 60000 }.toInt()
 
                 // Creating SleepData object
                 SleepData(
@@ -102,11 +133,11 @@ object SleepDataGenerator {
                     remSleep = remTimes.joinToString(", "),
                     coreSleep = coreTimes.joinToString(", "),
                     deepSleep = deepTimes.joinToString(", "),
-                    totalSleepTime = totalSleepTime,
-                    totalAwakeTime = totalAwakeTime,
-                    totalRemTime = totalRemTime,
-                    totalCoreTime = totalCoreTime,
-                    totalDeepTime = totalDeepTime,
+                    totalSleepTime = formatTime,
+                    totalAwakeTime = totalAwakeTime.toString(),
+                    totalRemTime = totalRemTime.toString(),
+                    totalCoreTime = totalCoreTime.toString(),
+                    totalDeepTime = totalDeepTime.toString(),
                     bpm = "60" // Example value
                 )
             } else {
@@ -118,6 +149,7 @@ object SleepDataGenerator {
             null
         }
     }
+
 
     private fun generateRandomDurations(start: Date, end: Date, minDurations: Int, maxDurations: Int): List<String> {
         val durations = ArrayList<String>()

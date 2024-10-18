@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -17,18 +18,20 @@ import android.widget.Toast;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
 import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.wav.WavExtractor;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -42,7 +45,7 @@ import com.sleep.fan.utility.Utility;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityUnpurchasedItem extends AppCompatActivity implements iBilling, View.OnClickListener, Player.EventListener {
+public class ActivityUnpurchasedItem extends AppCompatActivity implements iBilling, View.OnClickListener, Player.Listener {
 
     ListDataModel listDataModel;
     ArrayList<DataModel> listUnPurchased;
@@ -114,12 +117,17 @@ public class ActivityUnpurchasedItem extends AppCompatActivity implements iBilli
 
     }
 
-    SimpleExoPlayer player;
+    ExoPlayer player;
     private void startDemoPlayer(int position) {
 
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
-        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
+        player = new ExoPlayer.Builder(this)
+            .setTrackSelector(trackSelector)
+            .setLoadControl(loadControl)
+            .build();
+
+// Add the listener
         player.addListener(this);
         int trackID = getResources().getIdentifier("@raw/"+listUnPurchased.get(position).soundID, null, getPackageName());
         setDataSpec(trackID);
@@ -143,16 +151,29 @@ public class ActivityUnpurchasedItem extends AppCompatActivity implements iBilli
             }
         };
 
-        MediaSource audioSource = new ExtractorMediaSource(rawResourceDataSource.getUri(),
-                factory, WavExtractor.FACTORY, null, null);
-        loopingMediaSource = new LoopingMediaSource(audioSource);
+        Uri uri = rawResourceDataSource.getUri();
+        MediaItem mediaItem = MediaItem.fromUri(uri);
 
-        player.prepare(loopingMediaSource);
+// Create a MediaSource using the ProgressiveMediaSource.Factory for extracting audio
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, "user-agent");
+        MediaSource audioSource = new ProgressiveMediaSource.Factory(dataSourceFactory, WavExtractor.FACTORY)
+            .createMediaSource(mediaItem);
+
+// Prepare the player with the media source
+        player.setMediaSource(audioSource);
+
+// Set repeat mode (equivalent to LoopingMediaSource)
+        player.setRepeatMode(Player.REPEAT_MODE_ALL);
+
+// Prepare and start playback
+        player.prepare();
         player.setPlayWhenReady(true);
         player.seekTo(0);
         player.setVolume(0.9f);
+
+// Set playing state and start timer
         isPlaying = true;
-        timerStart(60*1000);
+        timerStart(60 * 1000);
     }
 
     CountDownTimer countDownTimer;

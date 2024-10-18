@@ -24,8 +24,9 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -277,7 +278,7 @@ public class ActivityFan extends SoundBaseActivity implements View.OnClickListen
     LinearLayout relaxation, mood_uplift, cognitive, creativity;
     CardView btnDone;
     MediaPlayer binauralMP;
-    SimpleExoPlayer binauralExoPlayer;
+    ExoPlayer binauralExoPlayer;
     private BottomSheetDialog bottomSheetBinauralDialog;
     private String selectedBinaural = "null";
     private void OverlayBinaural() {
@@ -405,18 +406,21 @@ public class ActivityFan extends SoundBaseActivity implements View.OnClickListen
 
     public void setBinauralLooping(int rawID) {
         if (binauralExoPlayer == null) {
-            // Create an instance of the ExoPlayer
-            TrackSelection.Factory adaptiveTrackSelectionFactory = new AdaptiveTrackSelection.Factory();
-            binauralExoPlayer = ExoPlayerFactory.newSimpleInstance(
-                this,
-                new DefaultTrackSelector(adaptiveTrackSelectionFactory),
-                new DefaultLoadControl());
+            // Create a DefaultTrackSelector
+            DefaultTrackSelector trackSelector = new DefaultTrackSelector(this);
+
+            // Create an instance of the ExoPlayer using the new ExoPlayer.Builder
+            binauralExoPlayer = new ExoPlayer.Builder(this)
+                .setTrackSelector(trackSelector)
+                .setLoadControl(new DefaultLoadControl())
+                .build();
 
             // Correct way to build Uri for raw resources
             Uri uri = RawResourceDataSource.buildRawResourceUri(rawID);
 
             MediaSource mediaSource = buildMediaSource(uri);
-            binauralExoPlayer.prepare(mediaSource);
+            binauralExoPlayer.setMediaSource(mediaSource);
+            binauralExoPlayer.prepare();
             binauralExoPlayer.setRepeatMode(Player.REPEAT_MODE_ALL);
             binauralExoPlayer.setPlayWhenReady(true);
         }
@@ -435,11 +439,16 @@ public class ActivityFan extends SoundBaseActivity implements View.OnClickListen
         }
     }
     private MediaSource buildMediaSource(Uri uri) {
-        // Create a data source factory.
+        // Create a MediaItem from the Uri
+        MediaItem mediaItem = MediaItem.fromUri(uri);
+
+        // Create a data source factory
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, "user-agent");
 
-        // This is the correct way to create a MediaSource for a raw resource
-        MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
+        // Create a ProgressiveMediaSource using the MediaItem
+        MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(mediaItem);
+
         return mediaSource;
     }
 

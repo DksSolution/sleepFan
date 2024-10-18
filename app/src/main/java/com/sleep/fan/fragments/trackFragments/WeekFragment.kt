@@ -672,13 +672,11 @@ class WeekFragment : Fragment() {
                 calendar.time = startTime
                 val startHour = calendar.get(Calendar.HOUR_OF_DAY) + calendar.get(Calendar.MINUTE) / 60f
                 val startOffset = if (startHour < 18) 6f else startHour - 18f
-
                 // Get durations for each sleep type
                 val awakeDurations = data.awakeSlots.map { it.duration }.toFloatArray()
                 val remDurations = data.remSlots.map { it.duration }.toFloatArray()
                 val coreDurations = data.coreSlots.map { it.duration }.toFloatArray()
                 val deepDurations = data.deepSlots.map { it.duration }.toFloatArray()
-
                 // Combine all durations into a single BarEntry
                 entries.add(
                     BarEntry(
@@ -691,7 +689,6 @@ class WeekFragment : Fragment() {
                 entries.add(BarEntry(i.toFloat(), floatArrayOf(6f, 0f, 0f, 0f, 0f)))
             }
         }
-
         // Create a BarDataSet with the entries
         val barDataSet = BarDataSet(entries, "Sleep Data")
         // Set colors for different sleep types
@@ -703,10 +700,8 @@ class WeekFragment : Fragment() {
             Color.parseColor("#302e93")   // Deep
         )
         barDataSet.stackLabels = arrayOf("Empty", "Awake", "REM", "Core", "Deep")
-
         val barData = BarData(barDataSet)
         barData.barWidth = 0.4f
-
         barDataSet.valueFormatter = object : ValueFormatter() {
             override fun getBarLabel(barEntry: BarEntry?): String {
                 return ""
@@ -716,7 +711,6 @@ class WeekFragment : Fragment() {
                 return ""
             }
         }
-
         // Hide values above bars
         barData.setValueTextColor(Color.TRANSPARENT)
         chart!!.setDrawValueAboveBar(false)
@@ -734,8 +728,8 @@ class WeekFragment : Fragment() {
         yAxis.axisMaximum = 24f
         yAxis.textColor = Color.WHITE
         yAxis.setLabelCount(8, false)
-        yAxis.granularity = 3f // Ensure labels are shown at intervals of 3 hours
-        yAxis.setDrawGridLines(false) // Remove horizontal grid lines
+        yAxis.granularity = 3f
+        yAxis.setDrawGridLines(false)
         yAxis.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 val hour = value.toInt()
@@ -752,32 +746,18 @@ class WeekFragment : Fragment() {
                 }
             }
         }
-
-        // Disable the right y-axis
         val rightAxis = chart!!.axisRight
         rightAxis.isEnabled = false
-        rightAxis.setDrawGridLines(false) // Ensure no grid lines are drawn on the right axis
-
-        // Disable the description text
+        rightAxis.setDrawGridLines(false)
         chart!!.description.isEnabled = false
-        // Enable the legend
         chart!!.legend.isEnabled = true
-        // Refresh the chart
         chart!!.invalidate()
     }
-
-
-
-
-
-    // ******* End New Chart code ********
-
     private fun displayCurrentRecord() {
         allSleepRecords?.let { records ->
             if (currentIndex in records.indices) {
                 val currentRecord = records[currentIndex]
                 // Update the UI with the current record
-
                 binding!!.tvTimeInBedHr.text = currentRecord.sleep_time
                 binding!!.tvAwakeHr.text =
                     currentRecord.total_awake_time?.let { convertTimeStringToHoursAndMinutes(it) }
@@ -787,15 +767,12 @@ class WeekFragment : Fragment() {
                     currentRecord.total_core_time?.let { convertTimeStringToHoursAndMinutes(it) }
                 binding!!.tvDeepHr.text =
                     currentRecord.total_deep_time?.let { convertTimeStringToHoursAndMinutes(it) }
-
                 binding!!.tvProgressTimeASleep.text =
                     currentRecord.total_sleep_time?.let { formatTime(it) }
                 binding!!.tvTimeInBedHr.text =
                     currentRecord.total_sleep_time?.let { formatTime2(it) }
                 binding!!.tvTimeAsleepBedHr.text =
                     currentRecord.total_sleep_time?.let { formatTime3(it) }
-
-
                 binding!!.tvDate.text =
                     currentRecord.awake_time?.let {
                         currentRecord.sleep_time?.let { it1 ->
@@ -804,12 +781,10 @@ class WeekFragment : Fragment() {
                             )
                         }
                     }
-
 //                binding!!.tvProgressTimeASleep.text = currentRecord.total_sleep_time
             }
         }
     }
-
     private fun formatTime(timeString: String): String {
         // Regular expression to extract hours and minutes
         val regex = """(\d+)\s*(hours?|hr|minutes?|min)""".toRegex(RegexOption.IGNORE_CASE)

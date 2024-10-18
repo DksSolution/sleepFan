@@ -53,7 +53,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    implementation 'com.google.android.exoplayer:exoplayer:2.10.6'
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.2'
     implementation("com.google.android.ump:user-messaging-platform:2.2.0")
     //Billing library
     implementation 'com.android.billingclient:billing:7.0.0'
